@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: amony
+spec:
+  type: LoadBalancer
+  selector:
+    app: amony
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amony
+  labels:
+    app: amony
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amony
+  template:
+    metadata:
+      labels:
+        app: amony
+    spec:
+      containers:
+      - name: amony
+        image: us-central1-docker.pkg.dev/$GOOGLE_PROJECT/amony-images/amony-coffee-mis:latest
