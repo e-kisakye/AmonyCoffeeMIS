@@ -37,4 +37,17 @@ Access the application on this URL: https://localhost:7208/
 
 
 
+To run this project using docker, do the following:
+
+-Install Docker on your machine.
+
+Once you have Docker installed, you can build the image for the application by running the following command:
+
+```docker build -t amony-coffee-mis .```
+To run the application, you can use the following command:
+
+```docker-compose up```
+This will start the application and the database container.
+
+You can then access the application at http://localhost:5000
 
