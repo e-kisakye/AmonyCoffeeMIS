@@ -4,19 +4,32 @@ kind: Service
 metadata:
   name: amony
 spec:
-  type: LoadBalancer
-  selector:
-    app: amony
   ports:
   - port: 80
     targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: amony
+  type: NodePort
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: amony
+spec:
+  defaultBackend:
+    service:
+      name: amony
+      port:
+        number: 80
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: amony
-  labels:
-    app: amony
 spec:
   replicas: 1
   selector:
@@ -30,3 +43,22 @@ spec:
       containers:
       - name: amony
         image: us-central1-docker.pkg.dev/$GOOGLE_PROJECT/amony-images/amony-coffee-mis:latest
+        ports:
+          - containerPort: 80
+        livenessProbe:      
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:     # Used by Ingress/GCLB
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: 1024Mi
+          requests:
+            memory: 256Mi
