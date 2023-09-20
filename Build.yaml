@@ -1,0 +1,36 @@
+name: Build and deploy AmonyCoffeeMIS MVP
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0
+      
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Build the application
+        run: dotnet build --no-restore
+    
+    if: ${{ success() }}
+    
+  build-image:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build the image
+        run: docker build -t amony-coffee-mis .
