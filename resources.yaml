@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: amony
-        image: us-central1-docker.pkg.dev/$GOOGLE_PROJECT/amony-images/amony-coffee-mis:latest
+        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/amony-images/amony-coffee-mis:latest
         ports:
           - containerPort: 80
         livenessProbe:      
